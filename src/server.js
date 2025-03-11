@@ -6,6 +6,7 @@ import logger from "./config/logger.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import { eventRoutes } from "./routes/eventRoutes.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRoutes);
+app.use("/api/events", eventRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
