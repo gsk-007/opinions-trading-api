@@ -1,7 +1,11 @@
 import express from "express";
+import "express-async-errors";
 import morgan from "morgan";
 import cors from "cors";
 import logger from "./config/logger.js";
+import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
+import { userRoutes } from "./routes/userRoutes.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -19,8 +23,15 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 app.get("/", (req, res) => {
   res.send("Api is Running");
 });
+
+app.use("/api/users", userRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

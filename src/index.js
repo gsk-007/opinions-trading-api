@@ -12,6 +12,9 @@ const start = async () => {
   if (!process.env.DATABASE_URL) {
     throw new Error("DATABASE_URL must be present");
   }
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET must be present");
+  }
 
   await connectDB();
 
