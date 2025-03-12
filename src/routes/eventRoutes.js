@@ -8,18 +8,18 @@ import {
   updateEventResult,
   deleteEvent,
 } from "../controllers/eventController.js";
-import { protect } from "../middlewares/authMiddleware.js";
+import { admin, protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").get(getEvents).post(protect, createEvent);
+router.route("/").get(getEvents).post(protect, admin, createEvent);
 router
   .route("/:id")
   .get(getEventById)
-  .put(protect, updateEvent)
-  .delete(protect, deleteEvent);
+  .put(protect, admin, updateEvent)
+  .delete(protect, admin, deleteEvent);
 
-router.route("/:id/status").patch(protect, updateEventStatus);
-router.route("/:id/result").patch(protect, updateEventResult);
+router.route("/:id/status").patch(protect, admin, updateEventStatus);
+router.route("/:id/result").patch(protect, admin, updateEventResult);
 
 export { router as eventRoutes };
