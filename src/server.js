@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
 import { eventRoutes } from "./routes/eventRoutes.js";
+import { tradeRoutes } from "./routes/tradeRoutes.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/trades", tradeRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
