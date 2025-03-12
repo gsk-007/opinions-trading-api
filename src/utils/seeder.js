@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import User from "../models/userModel.js";
 import Event from "../models/eventModel.js";
 import bcrypt from "bcryptjs";
+import Market from "../models/marketModel.js";
 
 dotenv.config();
 
@@ -108,10 +109,15 @@ const seedUsers = async () => {
     // Clear existing users
     await User.deleteMany();
     await Event.deleteMany();
+    await Market.deleteMany();
 
     // Insert new users
     await User.insertMany(users);
-    await Event.insertMany(events);
+    const createdEvents = await Event.insertMany(events);
+
+    await Market.insertMany(
+      createdEvents.map((event) => ({ event: event._id }))
+    );
 
     console.log("✅ DB seeded successfully!");
     mongoose.disconnect();
