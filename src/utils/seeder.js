@@ -2,8 +2,12 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import User from "../models/userModel.js";
 import Event from "../models/eventModel.js";
+import bcrypt from "bcryptjs";
 
 dotenv.config();
+
+const salt = await bcrypt.genSalt(10);
+const password = await bcrypt.hash("password123", salt);
 
 // MongoDB Connection
 const mongoURI = process.env.DATABASE_URL;
@@ -13,32 +17,37 @@ const users = [
   {
     name: "user1",
     email: "user1@example.com",
-    password: "password123",
+    password,
     role: "user",
+    balance: 1000,
   },
   {
     name: "user2",
     email: "user2@example.com",
-    password: "password123",
+    password,
     role: "user",
+    balance: 1000,
   },
   {
     name: "user3",
     email: "user3@example.com",
-    password: "password123",
+    password,
     role: "user",
+    balance: 1000,
   },
   {
     name: "admin1",
     email: "admin1@example.com",
-    password: "password123",
+    password,
     role: "admin",
+    balance: 1000,
   },
   {
     name: "admin2",
     email: "admin2@example.com",
-    password: "password123",
+    password,
     role: "admin",
+    balance: 1000,
   },
 ];
 
