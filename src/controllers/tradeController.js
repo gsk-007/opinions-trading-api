@@ -1,6 +1,8 @@
 import Trade from "../models/tradeModel.js";
 import Event from "../models/eventModel.js";
+import User from "../models/userModel.js";
 import { tradeValidationSchema } from "../validators/trade.js";
+import mongoose from "mongoose";
 
 /* @description Get all trades for logged in user
  * @route GET /api/trades
@@ -41,36 +43,122 @@ const getTradeById = async (req, res) => {
   res.status(200).json(trade);
 };
 
-/* @description Get Events
- * @route GET /api/events
+/* @description Create Trade
+ * @route POST /api/trades
  * @access Public
  */
 const createTrade = async (req, res) => {
-  const validatedData = await tradeValidationSchema.validateAsync(req.body);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const { event, choice, amount, odds } = validatedData;
+  try {
+    const validatedData = await tradeValidationSchema.validateAsync(req.body);
 
-  const eventExists = await Event.findById(event);
-  if (!eventExists) {
-    res.status(404);
-    throw new Error("Event not found");
+    const { event, choice, amount, odds } = validatedData;
+
+    const eventExists = await Event.findById(event);
+    if (!eventExists) {
+      throw new Error("Event not found");
+    }
+
+    if (eventExists.status !== "live") {
+      throw new Error(" Trades can only be placed on live events");
+    }
+
+    const user = await User.findById(req.user._id).session(session);
+    if (user.balance < amount) {
+      throw new Error("Insufficient Balance");
+    }
+
+    user.balance -= amount;
+    await user.save({ session });
+
+    const trade = await Trade.create(
+      [
+        {
+          user: req.user._id,
+          event,
+          choice,
+          amount,
+          odds,
+          status: "pending",
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json(trade);
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    res.status(400).json({ error: error.message });
   }
-
-  if (eventExists.status !== "live") {
-    res.status(400);
-    throw new Error(" Trades can only be placed on live events");
-  }
-
-  const trade = await Trade.create({
-    user: req.user._id,
-    event,
-    choice,
-    amount,
-    odds,
-    status: "pending",
-  });
-
-  res.status(201).json(trade);
 };
 
-export { getTrades, getTradeById, createTrade };
+/* @description Settle Trades for an event
+ * @route GET /api/trades/event/:eventId/settle
+ * @access Private(Admin)
+ */
+const settleTrades = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { eventId } = req.params;
+
+    // Find the event
+    const event = await Event.findById(eventId).session(session);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    if (event.status !== "completed") {
+      throw new Error("Event is not marked as completed");
+    }
+    if (event.result === "pending") {
+      throw new Error("Event result is pending");
+    }
+
+    const trades = await Trade.find({
+      event: eventId,
+      status: "pending",
+    }).session(session);
+    if (!trades.length) {
+      throw new Error("No pending trades found for this event");
+    }
+
+    for (const trade of trades) {
+      const user = await User.findById(trade.user).session(session);
+      if (!user) continue;
+
+      let payout = 0;
+
+      if (trade.choice == event.result) {
+        payout = trade.amount * trade.odds;
+
+        user.balance += payout;
+        trade.payout = payout;
+        trade.status = "won";
+      } else {
+        trade.status = "lost";
+      }
+      await trade.save({ session });
+      await user.save({ session });
+
+      // notify via wesocket
+
+      await session.commitTransaction();
+      session.endSession();
+
+      res.status(200).json({ message: "Trades settled successfully" });
+    }
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    res.status(400);
+    throw new Error(error.message);
+  }
+};
+export { getTrades, getTradeById, createTrade, settleTrades };
