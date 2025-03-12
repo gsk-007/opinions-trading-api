@@ -10,6 +10,7 @@ const eventSchema = new mongoose.Schema(
       type: String,
       enum: ["sports", "politics", "entertainment"],
       required: true,
+      index: true,
     },
     odds: {
       yes: { type: Number, required: true },
@@ -19,6 +20,7 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default: "upcoming",
       enum: ["upcoming", "live", "completed"],
+      index: true,
     },
     result: {
       type: String,
@@ -34,8 +36,10 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+eventSchema.index({ eventType: 1, status: 1 });
 
 const Event = mongoose.model("Event", eventSchema);
 

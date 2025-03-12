@@ -6,11 +6,13 @@ const tradeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
     event: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
       required: true,
+      index: true,
     },
     choice: {
       type: String,
@@ -29,14 +31,17 @@ const tradeSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "won", "lost"],
       default: "pending",
+      index: true,
     },
     payout: {
       type: Number,
       default: 0,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
+
+tradeSchema.index({ user: 1, event: 1 });
 
 const Trade = mongoose.model("Trade", tradeSchema);
 

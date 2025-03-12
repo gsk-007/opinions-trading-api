@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 // Hash password before saving
@@ -46,6 +46,8 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+userSchema.index({ role: 1, balance: -1 });
 
 const User = mongoose.model("User", userSchema);
 
