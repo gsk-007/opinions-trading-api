@@ -3,6 +3,8 @@ import Event from "../models/eventModel.js";
 import User from "../models/userModel.js";
 import { tradeValidationSchema } from "../validators/trade.js";
 import mongoose from "mongoose";
+import Market from "../models/marketModel.js";
+import { broadcastTradeUpdate } from "../socket/socket.js";
 
 /* @description Get all trades for logged in user
  * @route GET /api/trades
@@ -70,6 +72,13 @@ const createTrade = async (req, res) => {
       throw new Error("Insufficient Balance");
     }
 
+    const marketData = await Market.findOne({ event });
+    if (choice == "yes") {
+      marketData.totalYesBets += amount;
+    } else {
+      marketData.totalNoBets += amount;
+    }
+    await marketData.save({ session });
     user.balance -= amount;
     await user.save({ session });
 
@@ -87,6 +96,8 @@ const createTrade = async (req, res) => {
       { session }
     );
 
+    broadcastTradeUpdate("created", trade);
+
     await session.commitTransaction();
     session.endSession();
 
@@ -94,7 +105,8 @@ const createTrade = async (req, res) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    res.status(400).json({ error: error.message });
+    res.status(400);
+    throw new Error(error.message);
   }
 };
 
@@ -148,6 +160,7 @@ const settleTrades = async (req, res) => {
       await user.save({ session });
 
       // notify via wesocket
+      broadcastTradeUpdate("updated", trade);
 
       await session.commitTransaction();
       session.endSession();

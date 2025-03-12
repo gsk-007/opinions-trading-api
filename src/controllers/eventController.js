@@ -1,4 +1,6 @@
 import Event from "../models/eventModel.js";
+import Market from "../models/marketModel.js";
+import { broadcastEventUpdate } from "../socket/socket.js";
 import { eventValidationSchema } from "../validators/event.js";
 
 /* @description Get Events
@@ -67,6 +69,11 @@ const createEvent = async (req, res) => {
     endTime,
   });
 
+  await Market.create({ event: event._id });
+
+  // Broadcast event creation
+  broadcastEventUpdate("created", event);
+
   res.status(201).json(event);
 };
 
@@ -91,6 +98,8 @@ const updateEvent = async (req, res) => {
   event.endTime = validatedData.endTime || event.endTime;
 
   const updatedEvent = await event.save();
+
+  broadcastEventUpdate("updated", updatedEvent);
   res.status(200).json(updatedEvent);
 };
 
@@ -114,6 +123,8 @@ const updateEventStatus = async (req, res) => {
 
   event.status = status;
   await event.save();
+
+  broadcastEventUpdate("updated", event);
 
   res.status(200).json({ message: "Event status updated", event });
 };
@@ -143,6 +154,9 @@ const updateEventResult = async (req, res) => {
 
   event.result = result;
   await event.save();
+
+  // broadcast event update
+  broadcastEventUpdate("updated", event);
 
   res.status(200).json({ message: "Event result updated", event });
 };

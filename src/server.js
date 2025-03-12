@@ -9,8 +9,13 @@ import cookieParser from "cookie-parser";
 import { eventRoutes } from "./routes/eventRoutes.js";
 import { tradeRoutes } from "./routes/tradeRoutes.js";
 import { marketRoutes } from "./routes/marketRoutes.js";
+import http from "http";
+import { initializeSocket } from "./socket/socket.js";
 
 const app = express();
+const server = http.createServer();
+
+initializeSocket(server);
 
 app.use(cors());
 
