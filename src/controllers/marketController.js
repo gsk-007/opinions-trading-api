@@ -10,7 +10,7 @@ const getMarkets = async (req, res) => {
 
   const totalMarkets = await Market.countDocuments();
   const markets = await Market.find()
-    .populate("eventId", "eventName status")
+    .populate("event", "eventName status")
     .skip((page - 1) * limit)
     .limit(limit);
 
@@ -28,8 +28,8 @@ const getMarkets = async (req, res) => {
  */
 const getMarketById = async (req, res) => {
   const market = await Market.findById(req.params.id).populate(
-    "eventId",
-    "eventName status",
+    "event",
+    "eventName status"
   );
 
   if (!market) {
@@ -47,9 +47,9 @@ const getMarketById = async (req, res) => {
 const getMarketByEvent = async (req, res) => {
   const { eventId } = req.params;
 
-  const market = await findOne({ eventId }).populate(
-    "eventId",
-    "eventName status",
+  const market = await Market.findOne({ event: eventId }).populate(
+    "event",
+    "eventName status"
   );
 
   if (!market) {

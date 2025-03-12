@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const marketSchema = new mongoose.Schema(
   {
-    eventId: {
+    event: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
       required: true,
@@ -15,12 +15,8 @@ const marketSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    totalVolume: {
-      type: Number,
-      default: 0,
-    },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 const Market = mongoose.model("Market", marketSchema);
