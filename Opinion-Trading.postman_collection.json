@@ -1,0 +1,500 @@
+{
+	"info": {
+		"_postman_id": "69e994ef-acf0-4ada-b52c-34904c85af7e",
+		"name": "Opinion-Trading",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17278326"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"John Doe\",\r\n    \"email\":\"john.doe@example.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"john.doe@example.com\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/users/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get Events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/events",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEventById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/events/:eventId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createEvent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"eventName\": \"Presidential Election Debate\",\r\n  \"eventType\": \"politics\",\r\n  \"odds\": {\r\n    \"yes\": 1.8,\r\n    \"no\": 2.2\r\n  },\r\n  \"startTime\": \"2025-03-15T18:00:00Z\",\r\n  \"endTime\": \"2025-03-15T20:00:00Z\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/events",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Event Details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"eventName\": \"Presidential Election Debate\",\r\n  \"eventType\": \"politics\",\r\n  \"odds\": {\r\n    \"yes\": 1.5,\r\n    \"no\": 2.2\r\n  },\r\n  \"startTime\": \"2025-03-15T18:00:00Z\",\r\n  \"endTime\": \"2025-03-15T20:00:00Z\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/events/:eventId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Event Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\":\"completed\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/events/:eventId/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventId",
+								"status"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Event Result",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"result\":\"yes\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/events/:eventId/result",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventId",
+								"result"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Event",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/events/:eventId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"events",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trades",
+			"item": [
+				{
+					"name": "Get trades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/trades",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"trades"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get trade By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/trades/:tradeId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"trades",
+								":tradeId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "tradeId",
+									"value": "67d1dffa2399cf4a584cd6ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create trade",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"event\":\"67d1de730c33988ea848aeed\",\r\n    \"choice\":\"yes\",\r\n    \"amount\":10,\r\n    \"odds\": 1.7\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/trades",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"trades"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Settle Trades",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/trades/event/:eventId/settle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"trades",
+								"event",
+								":eventId",
+								"settle"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Market",
+			"item": [
+				{
+					"name": "Get Market data for an event",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/markets/event/:eventId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"markets",
+								"event",
+								":eventId"
+							],
+							"variable": [
+								{
+									"key": "eventId",
+									"value": "67d1de730c33988ea848aeed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Market data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/markets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"markets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Market By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/markets/:marketId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"markets",
+								":marketId"
+							],
+							"variable": [
+								{
+									"key": "marketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
